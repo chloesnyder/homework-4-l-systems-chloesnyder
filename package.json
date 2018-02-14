@@ -19,7 +19,6 @@
     "dat-gui": "^0.5.0",
     "gl-matrix": "^2.4.0",
     "stats-js": "^1.0.0-alpha1",
-    "ts-data.stack": "^1.0.6",
-    "ts-vector": "^0.1.0"
+    "ts-data.stack": "^1.0.6"
   }
 }

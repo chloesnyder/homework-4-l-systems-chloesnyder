@@ -1,6 +1,6 @@
 import {vec3, vec4, mat3, mat4, quat} from 'gl-matrix';
-import Stack from "ts-data.stack";
-import { transformMat4 } from 'gl-matrix/src/gl-matrix/vec2';
+//import Stack from "ts-data.stack";
+
 
 const PI = Math.PI;
 const deg2rad = PI / 180.0;
