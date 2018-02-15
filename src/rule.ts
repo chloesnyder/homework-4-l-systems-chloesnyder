@@ -15,7 +15,7 @@ class  Rule
 
     constructor() {}
 
-        // TODO: come up with actual rules
+    // TODO: come up with actual rules
     // The rules stating how to expand the original string
     applyRules(ch: number, str: string, iter: number) : string
     {
@@ -35,17 +35,6 @@ class  Rule
             } else {
                 toReturn = "FRU";
             }
-          
-           /* if(iter < 2) {
-                toReturn = "U";
-            } else {
-                if(probability < .5)
-                {
-                    toReturn = "RBL";
-                } else {
-                    toReturn = "LUB";
-                }
-            }*/
            
         } else if (currChar === "B") {
             if(probability < .5)
@@ -54,15 +43,6 @@ class  Rule
             } else {
                 toReturn = "BLD";
             }
-           /* if(iter < 2)
-            {
-                toReturn = "";
-            } else {
-                if(probability < .3)
-                {
-
-                }
-            }*/
 
         } else if (currChar === "U") {
             if(probability < .5)

@@ -15,7 +15,7 @@ class  LSystem
 {
     constructor()
     {
-        
+
     }
 
     draw()
@@ -26,8 +26,7 @@ class  LSystem
     // Parses the instruction string to tell the turtle how to move
     parseLSystem(ts: TurtleStack, instructions: string, angle: number, distance: number)
     {
-        var t = new Turtle(vec3.fromValues(0.0, 0.0, 0.0), 0); // initially start turtle at position 0
-        ts.save(t);
+        var t = ts.restore();
         var depth = 0; // refers to number of times we have seen a [ before seeing a ]
         for(var i = 0; i < instructions.length; i++)
         {

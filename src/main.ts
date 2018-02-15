@@ -16,27 +16,29 @@ import Rule from './rule';
 // Define an object with application parameters and button callbacks
 // This will be referred to by dat.GUI's functions that add GUI elements.
 const controls = {
-  tesselations: 5,
-  'Load Scene': loadScene, // A function pointer, essentially
+  iterations: 5,
+  angle : 30,
+  distance : 1.0, 
+  axiom : "",
+  'Load LSystem': loadScene, // A function pointer, essentially
 };
 
 let icosphere: Icosphere;
 let square: Square;
 
 function loadScene() {
-  // icosphere = new Icosphere(vec3.fromValues(0, 0, 0), 1, controls.tesselations);
-  // icosphere.create();
+
    square = new Square(vec3.fromValues(0, 0, 0));
    square.create();
 
-  var numIter = 5; //TODO: make this be a variable controlled by controls
-  var axiom = "F"; // TODO: make this be a variable controlled by user input
-  var angle = 30; // TODO: ^^
-  var distance = 1.0; // TODO: ^^
+  var numIter = controls.iterations; 
+  var axiom = controls.axiom; 
+  var angle = controls.angle; 
+  var distance = controls.distance; 
 
   var instructions = new Rule().createLSystem(numIter, axiom);
   var turtleStack = new TurtleStack();
-  var lsystem = new LSystem().parseLSystem(turtleStack, instructions ,angle, distance);
+  var lsystem = new LSystem().parseLSystem(turtleStack, instructions, angle, distance);
  
 }
 
@@ -52,8 +54,12 @@ function main() {
 
   // Add controls to the gui
   const gui = new DAT.GUI();
-  gui.add(controls, 'tesselations', 0, 8).step(1);
-  gui.add(controls, 'Load Scene');
+  gui.add(controls, 'iterations', 0, 25).step(1);
+  gui.add(controls, 'angle', 0, 360).step(1);
+  gui.add(controls, 'distance', 0, 5).step(.5);
+  gui.add(controls, 'axiom');
+  gui.add(controls, 'Load LSystem');
+
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
