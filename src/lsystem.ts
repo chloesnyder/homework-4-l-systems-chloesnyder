@@ -1,56 +1,68 @@
 import Turtle from './turtle';
+import TurtleStack from './turtlestack';
 import {vec3, vec4, mat3, mat4, quat} from 'gl-matrix';
 
 const PI = Math.PI;
 const deg2rad = PI / 180.0;
 
 
-// A class to create an LSystem. This class processes the initial axiom string,
-// and expands it into a longer string based on a set of rules
-// the string is expanded for a given number of iterations
-//http://interactivepython.org/courselib/static/thinkcspy/Strings/TurtlesandStringsandLSystems.html
+// A class to create an LSystem. This class
+// takes the final expanded string from Rule and maps the string to a function (moves the Turtle)
+
+// When the string is fully parsed, call draw to send the final LSystem to a VBO
+// Reference: http://interactivepython.org/courselib/static/thinkcspy/Strings/TurtlesandStringsandLSystems.html
 class  LSystem
 {
-
-    // TODO: come up with actual rules
-    // The rules stating how to expand the original string
-    applyRules(ch: number, str: string) : string
+    constructor()
     {
-       var currChar = str.charAt(ch);
-       var toReturn = "";
-       if(currChar === 'SOME CHAR')
-       {
-            toReturn = "some other char to replace"
-       } else if (currChar === 'SOME OTHER CHAR') {
-            toReturn = "some other char to replace"
-       } else {
-           toReturn = currChar; // no rules to apply so keep char
-       }
-        return toReturn;
+        
     }
 
-    // Process initial string and expand based on rules
-    processString(oldStr: string) : string
+    draw()
     {
-        var newstr = "";
-        for(var ch = 0; ch < oldStr.length; ch++)
+
+    }
+
+    // Parses the instruction string to tell the turtle how to move
+    parseLSystem(ts: TurtleStack, instructions: string, angle: number, distance: number)
+    {
+        var t = new Turtle(vec3.fromValues(0.0, 0.0, 0.0), 0); // initially start turtle at position 0
+        ts.save(t);
+        var depth = 0; // refers to number of times we have seen a [ before seeing a ]
+        for(var i = 0; i < instructions.length; i++)
         {
-            newstr = newstr + this.applyRules(ch, oldStr);
+            var rule = instructions.charAt(i);
+            if(rule === "F")
+            {
+                t.move("forward", angle, distance);
+            } else if (rule === "B")
+            {
+                t.move("backward", angle, distance);
+            } else if (rule === "R") {
+                t.move("right", angle, distance);
+            } else if (rule === "L") {
+                t.move("left", angle, distance);
+            } else if (rule === "U") {
+                t.move("up", angle, distance);
+            } else if (rule === "D") {
+                t.move("down", angle, distance);
+            } else if (rule === "[") {
+                // increment depth, pop turtle off stack and operate on it
+                depth++;
+                t = ts.restore();
+            } else if (rule === "]") {
+                // reset depth, push this turtle onto the stack
+                depth--;
+                ts.save(t);
+            }
         }
-        return newstr;
+
+        // draw when done parsing
+        this.draw();
+
     }
 
-    createLSystem(numIters: number, axiom: string) : string
-    {
-      var startString = axiom;
-      var endString = "";
-      for(var i = 0; i < numIters; i++)
-      {
-        endString = this.processString(startString);
-        startString = endString;
-      }
-      return endString;
-    }
+
 }
 
 export default LSystem;

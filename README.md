@@ -1,7 +1,5 @@
 Note to instructors:
 
-Run npm install ts-data.stack and npm install ts-vector
-
 # Homework 4: L-systems
 
 For this assignment, you will design a set of formal grammar rules to create

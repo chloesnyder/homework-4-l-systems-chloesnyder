@@ -8,7 +8,10 @@ import Camera from './Camera';
 import {setGL} from './globals';
 import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
 import Turtle from './turtle';
-import TurtleStack from './turtlestack'
+import TurtleStack from './turtlestack';
+import LSystem from './lsystem';
+import Rule from './rule';
+
 
 // Define an object with application parameters and button callbacks
 // This will be referred to by dat.GUI's functions that add GUI elements.
@@ -21,25 +24,23 @@ let icosphere: Icosphere;
 let square: Square;
 
 function loadScene() {
-  icosphere = new Icosphere(vec3.fromValues(0, 0, 0), 1, controls.tesselations);
-  icosphere.create();
-  square = new Square(vec3.fromValues(0, 0, 0));
-  square.create();
+  // icosphere = new Icosphere(vec3.fromValues(0, 0, 0), 1, controls.tesselations);
+  // icosphere.create();
+   square = new Square(vec3.fromValues(0, 0, 0));
+   square.create();
+
+  var numIter = 5; //TODO: make this be a variable controlled by controls
+  var axiom = "F"; // TODO: make this be a variable controlled by user input
+  var angle = 30; // TODO: ^^
+  var distance = 1.0; // TODO: ^^
+
+  var instructions = new Rule().createLSystem(numIter, axiom);
+  var turtleStack = new TurtleStack();
+  var lsystem = new LSystem().parseLSystem(turtleStack, instructions ,angle, distance);
+ 
 }
 
 function main() {
-
-  function createLSystem(numIters: number, axiom: string)
-  {
-    var startString = axiom;
-    var endString = "";
-    for(var i = 0; i < numIters; i++)
-    {
-      
-    }
-  }
-
-
 
   // Initial display for framerate
   const stats = Stats();
