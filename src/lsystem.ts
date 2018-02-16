@@ -1,6 +1,8 @@
 import Turtle from './turtle';
 import TurtleStack from './turtlestack';
 import {vec3, vec4, mat3, mat4, quat} from 'gl-matrix';
+import Drawable from './rendering/gl/Drawable';
+import {gl} from './globals';
 
 const PI = Math.PI;
 const deg2rad = PI / 180.0;
@@ -11,21 +13,46 @@ const deg2rad = PI / 180.0;
 
 // When the string is fully parsed, call draw to send the final LSystem to a VBO
 // Reference: http://interactivepython.org/courselib/static/thinkcspy/Strings/TurtlesandStringsandLSystems.html
-class  LSystem
+class  LSystem extends Drawable
 {
+    indices: Uint32Array;
+    positions: Float32Array;
+    normals: Float32Array;
+    center: vec4;
+
+    turtleStack: TurtleStack;
+
     constructor()
     {
-
+        super();
+       // this.indices
     }
 
-    draw()
+    create()
     {
+        this.indices = new Uint32Array(this.turtleStack.indices);
+        this.normals = new Float32Array(this.turtleStack.normals);
+        this.positions = new Float32Array(this.turtleStack.positions);
 
+        this.generateIdx();
+        this.generatePos();
+        this.generateNor();
+    
+        this.count = this.indices.length;
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
+    
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.bufNor);
+        gl.bufferData(gl.ARRAY_BUFFER, this.normals, gl.STATIC_DRAW);
+    
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.bufPos);
+        gl.bufferData(gl.ARRAY_BUFFER, this.positions, gl.STATIC_DRAW);
     }
 
     // Parses the instruction string to tell the turtle how to move
     parseLSystem(ts: TurtleStack, instructions: string, angle: number, distance: number)
     {
+        this.turtleStack = ts;
         var t = ts.restore();
         var depth = 0; // refers to number of times we have seen a [ before seeing a ]
         for(var i = 0; i < instructions.length; i++)
@@ -55,9 +82,8 @@ class  LSystem
                 ts.save(t);
             }
         }
-
-        // draw when done parsing
-        this.draw();
+        // create
+        this.create();
 
     }
 

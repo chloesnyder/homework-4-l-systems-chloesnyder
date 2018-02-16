@@ -25,11 +25,13 @@ const controls = {
 
 let icosphere: Icosphere;
 let square: Square;
+let lsystem: LSystem;
 
 function loadScene() {
 
-   square = new Square(vec3.fromValues(0, 0, 0));
-   square.create();
+   //square = new Square(vec3.fromValues(0, 0, 0));
+   //square.create();
+
 
   var numIter = controls.iterations; 
   var axiom = controls.axiom; 
@@ -38,7 +40,9 @@ function loadScene() {
 
   var instructions = new Rule().createLSystem(numIter, axiom);
   var turtleStack = new TurtleStack();
-  var lsystem = new LSystem().parseLSystem(turtleStack, instructions, angle, distance);
+  lsystem = new LSystem();
+  lsystem.parseLSystem(turtleStack, instructions, angle, distance);
+  lsystem.create();
  
 }
 
@@ -59,6 +63,7 @@ function main() {
   gui.add(controls, 'distance', 0, 5).step(.5);
   gui.add(controls, 'axiom');
   gui.add(controls, 'Load LSystem');
+
 
 
   // get canvas and webgl context
@@ -93,7 +98,7 @@ function main() {
     renderer.clear();
     renderer.render(camera, lambert, [
       // icosphere,
-      square,
+      lsystem,
     ]);
     stats.end();
 

@@ -1,5 +1,6 @@
 import Turtle from './turtle';
 import {vec3, vec4, mat3, mat4, quat} from 'gl-matrix';
+import Square from './geometry/Square';
 
 const PI = Math.PI;
 const deg2rad = PI / 180.0;
@@ -16,6 +17,11 @@ class  TurtleStack
     currPos: vec3;
     currDir: vec3;
     currTurtle: Turtle;
+
+    indices: Uint32Array;
+    positions: Float32Array;
+    normals: Float32Array;
+    center: vec4;
 
     constructor()
     {
@@ -37,6 +43,7 @@ class  TurtleStack
         this.currTurtle = this.stack.pop();
         this.currPos = this.currTurtle.getState()[0];
         this.currDir = this.currTurtle.getState()[1];
+        this.drawBranch(); // store turtle VBOs in global VBO list
         return this.currTurtle;
     }
 
@@ -54,7 +61,7 @@ class  TurtleStack
     // Doesn't actually "draw" the cylinder, just moves it to the right place for the final VBO to draw all at once
     drawBranch()
     {
-
+        // for now, representing with a square
     }
 
     // TODO: draw leaf
