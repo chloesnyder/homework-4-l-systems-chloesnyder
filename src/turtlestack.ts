@@ -45,6 +45,7 @@ class  TurtleStack
 
         // for some reason, branchIdx.length return 1
         this.branchCount = this.branchMesh.getCount();
+        console.log(this.branchCount);
      
         // convert into an array of "vec4s"
         for(var i = 0; i < this.branchCount; i++)
@@ -98,6 +99,7 @@ class  TurtleStack
     {
         var currBranchNor = new Array();
         var currBranchPos = new Array();
+        var currBranchIdx = this.branchIdx;
 
         var currPos = this.currTurtle.getPosition();
         var currRot = this.currTurtle.getOrientation();
@@ -130,7 +132,7 @@ class  TurtleStack
         }
 
 
-        this.indices = this.indices.concat(this.branchIdx);
+        this.indices = this.indices.concat(currBranchIdx);
         this.normals = this.normals.concat(currBranchNor);
         console.log(currBranchPos);
 
