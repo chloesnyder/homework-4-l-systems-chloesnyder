@@ -8,6 +8,7 @@ const PI = Math.PI;
 const deg2rad = PI / 180.0;
 
 
+
 // A class to create an LSystem. This class
 // takes the final expanded string from Rule and maps the string to a function (moves the Turtle)
 
@@ -21,12 +22,16 @@ class  LSystem extends Drawable
     center: vec4;
 
     turtleStack: TurtleStack;
+    t: Turtle;
 
     constructor()
     {
         super();
+        this.t = new Turtle(vec4.fromValues(0, 0, 0, 1), quat.create());
+        this.turtleStack = new TurtleStack(this.t);
     }
 
+    // TurtleStack holds the overall VBOs, now we copy them and create the final LSystem
     create()
     {
         this.indices = new Uint32Array(this.turtleStack.indices);
@@ -49,45 +54,38 @@ class  LSystem extends Drawable
     }
 
     // Parses the instruction string to tell the turtle how to move
-    parseLSystem(ts: TurtleStack, instructions: string, angle: number, distance: number)
+    parseLSystem(instructions: string, angle: number, distance: number)
     {
-        
-        // initial turtle positioned at (0,0,0)
-        var t = new Turtle(vec4.fromValues(0, 0, 0, 1), 0);
-        ts.save(t);
         var depth = 0; // refers to number of times we have seen a [ before seeing a ]
         for(var i = 0; i < instructions.length; i++)
         {
             var rule = instructions.charAt(i);
             if(rule === "F")
             {
-                t.move("forward", angle, distance);
+                this.t.move("forward", angle, distance);
             } else if (rule === "B")
             {
-                t.move("backward", angle, distance);
+                this.t.move("backward", angle, distance);
             } else if (rule === "R") {
-                t.move("right", angle, distance);
+                this.t.move("right", angle, distance);
             } else if (rule === "L") {
-                t.move("left", angle, distance);
+                this.t.move("left", angle, distance);
             } else if (rule === "U") {
-                t.move("up", angle, distance);
+                this.t.move("up", angle, distance);
             } else if (rule === "D") {
-                t.move("down", angle, distance);
+                this.t.move("down", angle, distance);
             } else if (rule === "[") {
                 // increment depth, pop turtle off stack and operate on it
                 depth++;
-                t = ts.restore();
+                this.turtleStack.save(this.t);
                 console.log("pop");
             } else if (rule === "]") {
                 // reset depth, push this turtle onto the stack
                 depth--;
-                ts.save(t);
+                this.t = this.turtleStack.restore();
                 console.log("push");
             }
         }
-        // create
-       // this.create();
-        this.turtleStack = ts;
         console.log(instructions);
 
     }

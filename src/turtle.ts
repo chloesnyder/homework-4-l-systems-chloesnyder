@@ -10,8 +10,7 @@ class  Turtle
 {
     position: vec4 = vec4.create(); // position
     orientation: quat = quat.create(); // a global quaternion governing rotation of turtle direction
-    direction: vec4 = vec4.create(); // the vector governing the direction the turtle is heading in
-    depth: number = 1; // iteration number    
+    direction: vec4 = vec4.create(); // the vector governing the direction the turtle is heading in 
     state: [vec4, vec4]; // the turtle's current position and orientation
     
     x_axis: vec3 = vec3.fromValues(1.0, 0.0, 0.0);
@@ -19,12 +18,27 @@ class  Turtle
     z_axis: vec3 = vec3.fromValues(0.0, 0.0, 1.0);
 
 
-    constructor(pos: vec4, iter: number) {
+    constructor(pos: vec4, or: quat) {
         this.position = pos;
+        this.orientation = or;
         this.direction = vec4.fromValues(0.0, 1.0, 0.0, 0.0); // initially, turtle moves straight up
        
-        this.depth = iter;
         this.state = [this.position, this.direction];
+    }
+
+    getPosition() : vec4
+    {
+        return this.position;
+    }
+
+    getOrientation() : quat
+    {
+        return this.orientation;
+    }
+
+    getDirection() : vec4
+    {
+        return this.direction;
     }
 
     // Move a turtle by specifying a direction to rotate the turtle, degree to rotate by, and how far to move forward

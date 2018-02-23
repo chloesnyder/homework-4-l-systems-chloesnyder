@@ -1,7 +1,9 @@
 import Turtle from './turtle';
 import {vec3, vec4, mat3, mat4, quat} from 'gl-matrix';
-import Square from './geometry/Square';
+import Mesh from './geometry/Mesh';
+import * as fs from 'fs';
 
+var OBJ = require('webgl-obj-loader');
 const PI = Math.PI;
 const deg2rad = PI / 180.0;
 
@@ -12,90 +14,116 @@ const deg2rad = PI / 180.0;
 
 class  TurtleStack
 {
-    stack: Turtle[];
-
-    currPos: vec4;
-    currDir: vec4;
+    stack: Turtle[] = new Array();
+    indices: Array<number> = new Array();
+    positions: Array<number> = new Array();
+    normals: Array<number> = new Array();
     currTurtle: Turtle;
 
-    indices: Uint32Array;
-    positions: Float32Array;
-    normals: Float32Array;
-    center: vec4;
+    branchMesh: Mesh;
+    branchIdx: Array<number> = new Array();
+    branchPos: Array<Array<number>>= new Array<Array<number>>();
+    branchNor: Array<Array<number>>= new Array<Array<number>>();
 
-    constructor()
+    constructor(t: Turtle)
     {
        // Instantiate stack with 1 turtle at the origin, moving straight up the Y axis
-        this.currPos = vec4.fromValues(0.0, 0.0, 0.0, 1.0);
-        this.currDir = vec4.fromValues(0.0, 1.0, 0.0, 0.0);
-        this.currTurtle = new Turtle(this.currPos, 0); 
-        this.stack = [];
+        this.currTurtle = t;
+        this.save(this.currTurtle);
 
-        this.indices = new Uint32Array(0);
-        this.positions = new Float32Array(0);
-        this.normals = new Float32Array(0);
+        //instantiate an instance of branch
+        this.branchMesh = new Mesh(vec3.fromValues(0, 0, 0));
+        this.branchMesh.loadBuffers(this.readTextFile('src/objs/cube.obj'));
+
+        var t_branchPos =  this.branchMesh.getTempPos();
+        var t_branchNor =  this.branchMesh.getTempNor();
+        this.branchIdx =  this.branchMesh.getTempIndices();
+     
+        // convert into an array of "vec4s"
+        for(var i = 0; i < this.branchIdx.length; i++)
+        {
+            this.branchNor.push([t_branchNor[i * 3], t_branchNor[i * 3 + 1], t_branchNor[i * 3 + 2], 0]);
+            this.branchPos.push([t_branchPos[i * 3], t_branchPos[i * 3 + 1], t_branchPos[i * 3 + 2], 0]);
+        }
 
     }
    
     save(t: Turtle)
     {
         this.stack.push(t);
-        console.log("jesus saves");
     }
 
     restore() : Turtle
     {
         this.currTurtle = this.stack.pop();
-        this.currPos = this.currTurtle.state[0];
-        this.currDir = this.currTurtle.state[1];
         this.drawBranch(); // store turtle VBOs in global VBO list
         console.log("restore");
         return this.currTurtle;
     }
 
-    getCurrPos() : vec4
-    {
-        return this.currPos;
-    }
 
-    getCurrDir() : vec4
+    //https://stackoverflow.com/questions/14446447/how-to-read-a-local-text-file
+    readTextFile(file: string) : string
     {
-        return this.currDir;
+        var text = "";
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file, false);
+        rawFile.onreadystatechange = function ()
+        {
+            if(rawFile.readyState === 4)
+            {
+                if(rawFile.status === 200 || rawFile.status == 0)
+                {
+                    var allText = rawFile.responseText;
+                    text = allText;
+                }
+            }
+        }
+        rawFile.send(null);
+        return text;
     }
 
     // TODO: draw the lsystem branches
     // Doesn't actually "draw" the cylinder, just moves it to the right place for the final VBO to draw all at once
     drawBranch()
     {
-        // for now, representing with a square
-        var currBranch = new Square(vec3.fromValues(this.currPos[0], this.currPos[1], this.currPos[2])); // update this to be an obj that takes in position, rotation, 
-      //  currBranch.create();
+        var currBranchIdx = new Array();
+        var currBranchNor = new Array();
+        var currBranchPos = new Array();
 
-        // append this branch's indices to the global index array
-        var a_indices = this.indices;
-        var b_indices = currBranch.indices;
-        var c_indices = new Uint32Array(a_indices.length + b_indices.length);
-        c_indices.set(a_indices);
-        c_indices.set(b_indices, a_indices.length);
-        this.indices = c_indices;
+        var currPos = this.currTurtle.getPosition();
+        var currRot = this.currTurtle.getOrientation();
+        var currTrans = mat4.create();
+        mat4.fromRotationTranslation(currTrans, currRot, vec3.fromValues(currPos[0], currPos[1], currPos[2]));
 
-        // append this branch's positions to the global index array
-        var a_pos = this.positions;
-        var b_pos = currBranch.positions;
-        var c_pos = new Float32Array(a_pos.length + b_pos.length);
-        c_pos.set(a_pos);
-        c_pos.set(b_pos, a_pos.length);
-        this.positions = c_pos;
+        // transform branch positions based on possition of the turtle
+        for(var i = 0; i < this.branchPos.length; i++)
+        {
+            var transPositions = vec4.fromValues(this.branchPos[i][0], this.branchPos[i][1], this.branchPos[i][2], 1.0);
+            var transNormals = vec4.create();
 
-        // append this branch's normals to the global index array
-        var a_norm = this.normals;
-        var b_norm = currBranch.normals;
-        var c_norm = new Float32Array(a_norm.length + b_norm.length);
-        c_norm.set(a_norm);
-        c_norm.set(b_norm, a_norm.length);
-        this.normals = c_norm;
+            //transform brach pos based on current transformation (rotation and position) of turtle
+            transPositions = vec4.transformMat4(transPositions, transPositions, currTrans);
+            //rotate normals based on current turtle rotation
+            var mat4Rot =  mat4.create();
+            mat4.fromQuat(mat4Rot, currRot);
+            transNormals = vec4.transformMat4(transNormals, this.branchNor[i], mat4Rot);
+            
+            // flatten into a temp VBO to append to final array
+            currBranchNor.push(transNormals[0]);
+            currBranchNor.push(transNormals[1]);
+            currBranchNor.push(transNormals[2]);
+            currBranchNor.push(transNormals[3]);
+            currBranchPos.push(transPositions[0]);
+            currBranchPos.push(transPositions[1]);
+            currBranchPos.push(transPositions[2]);
+            currBranchPos.push(transPositions[3]);
+        }
 
-       // currBranch.destory();
+        currBranchIdx = this.branchIdx;
+        this.indices.concat(currBranchIdx);
+        this.normals.concat(currBranchNor);
+        this.positions.concat(currBranchPos);
         console.log("drew a branch");
 
     }
