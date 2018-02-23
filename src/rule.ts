@@ -31,7 +31,7 @@ class  Rule
         {
             if(probability < .5)
             {
-                toReturn = "FF";
+                toReturn = "[FF]";
             } else {
                 toReturn = "FRU";
             }

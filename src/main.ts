@@ -11,38 +11,64 @@ import Turtle from './turtle';
 import TurtleStack from './turtlestack';
 import LSystem from './lsystem';
 import Rule from './rule';
+import Mesh from './geometry/Mesh';
+import * as fs from 'fs';
 
-
+var OBJ = require('webgl-obj-loader');
 // Define an object with application parameters and button callbacks
 // This will be referred to by dat.GUI's functions that add GUI elements.
 const controls = {
   iterations: 5,
   angle : 30,
   distance : 1.0, 
-  axiom : "",
+  axiom : "F[F]",
   'Load LSystem': loadScene, // A function pointer, essentially
 };
 
 let icosphere: Icosphere;
 let square: Square;
 let lsystem: LSystem;
+let mesh: Mesh;
+
+//https://stackoverflow.com/questions/14446447/how-to-read-a-local-text-file
+function readTextFile(file: string) : string
+{
+    var text = "";
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                text = allText;
+            }
+        }
+    }
+    rawFile.send(null);
+    return text;
+}
 
 function loadScene() {
 
-   //square = new Square(vec3.fromValues(0, 0, 0));
-   //square.create();
-
-
+  //square = new Square(vec3.fromValues(0, 0, 0));
+  //square.create();
+  
   var numIter = controls.iterations; 
   var axiom = controls.axiom; 
   var angle = controls.angle; 
   var distance = controls.distance; 
 
-  var instructions = new Rule().createLSystem(numIter, axiom);
+  /*var instructions = new Rule().createLSystem(numIter, axiom);
   var turtleStack = new TurtleStack();
   lsystem = new LSystem();
   lsystem.parseLSystem(turtleStack, instructions, angle, distance);
-  lsystem.create();
+  lsystem.create();*/
+
+  mesh = new Mesh(vec3.fromValues(0.0, 0.0, 0.0));
+  mesh.createMeshFromObjectString(readTextFile('src/objs/cube.obj'));
  
 }
 
@@ -63,8 +89,6 @@ function main() {
   gui.add(controls, 'distance', 0, 5).step(.5);
   gui.add(controls, 'axiom');
   gui.add(controls, 'Load LSystem');
-
-
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -96,9 +120,8 @@ function main() {
     stats.begin();
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
     renderer.clear();
-    renderer.render(camera, lambert, [
-      // icosphere,
-      lsystem,
+    renderer.render(camera, lambert, [ mesh,
+      //lsystem, 
     ]);
     stats.end();
 

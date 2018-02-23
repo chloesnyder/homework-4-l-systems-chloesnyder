@@ -8,20 +8,20 @@ const deg2rad = PI / 180.0;
 // A class representing a turtle. The turtle has a position, orientation, and a depth. Position and orientation
 class  Turtle
 {
-    position: vec3 = vec3.create(); // position
+    position: vec4 = vec4.create(); // position
     orientation: quat = quat.create(); // a global quaternion governing rotation of turtle direction
-    direction: vec3 = vec3.create(); // the vector governing the direction the turtle is heading in
+    direction: vec4 = vec4.create(); // the vector governing the direction the turtle is heading in
     depth: number = 1; // iteration number    
-    state: [vec3, vec3]; // the turtle's current position and orientation
+    state: [vec4, vec4]; // the turtle's current position and orientation
     
     x_axis: vec3 = vec3.fromValues(1.0, 0.0, 0.0);
     y_axis: vec3 = vec3.fromValues(0.0, 1.0, 0.0);
     z_axis: vec3 = vec3.fromValues(0.0, 0.0, 1.0);
 
 
-    constructor(pos: vec3, iter: number) {
+    constructor(pos: vec4, iter: number) {
         this.position = pos;
-        this.direction = vec3.fromValues(0.0, 1.0, 0.0); // initially, turtle moves straight up
+        this.direction = vec4.fromValues(0.0, 1.0, 0.0, 0.0); // initially, turtle moves straight up
        
         this.depth = iter;
         this.state = [this.position, this.direction];
@@ -33,21 +33,27 @@ class  Turtle
         if(direction === "right")
         {
             this.rotateAboutY(degree);
+            console.log("right");
         } else if (direction === "left")
         {
             this.rotateAboutY(-degree);
+            console.log("left");
         } else if (direction === "down")
         {
             this.rotateAboutZ(-degree);
+            console.log("down");
         } else if (direction === "up")
         {
             this.rotateAboutZ(degree);
+            console.log("up");
         } else if (direction === "forward")
         {
             this.rotateAboutX(degree);
+            console.log("forward");
         } else if (direction === "backward")
         {
             this.rotateAboutX(-degree);
+            console.log("backward");
         }
 
         this.moveForward(length);
@@ -62,14 +68,14 @@ class  Turtle
     // move the turtle forward a specific length
     moveForward(length: number)
     {
-        var scaled = vec3.create();
-        vec3.scale(scaled, this.direction, length);
-        vec3.add(this.position, this.position, scaled); // is this the right order?
+        var scaled = vec4.create();
+        vec4.scale(scaled, this.direction, length);
+        vec4.add(this.position, this.position, scaled); // is this the right order?
     }
 
     applyRotation()
     {
-        this.direction = vec3.transformQuat(this.direction, this.direction, this.orientation); // is this the right order?
+        this.direction = vec4.transformQuat(this.direction, this.direction, this.orientation); // is this the right order?
     }
 
     // Unsure about order of multiplication
@@ -97,15 +103,6 @@ class  Turtle
         this.applyRotation();  
     }
 
-    getState() : [vec3, vec3] 
-    {
-        return this.state;
-    }
-
-    getTurtle() : Turtle
-    {
-        return this;
-    }
 
 }
 

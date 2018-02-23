@@ -25,7 +25,6 @@ class  LSystem extends Drawable
     constructor()
     {
         super();
-       // this.indices
     }
 
     create()
@@ -52,8 +51,10 @@ class  LSystem extends Drawable
     // Parses the instruction string to tell the turtle how to move
     parseLSystem(ts: TurtleStack, instructions: string, angle: number, distance: number)
     {
-        this.turtleStack = ts;
-        var t = ts.restore();
+        
+        // initial turtle positioned at (0,0,0)
+        var t = new Turtle(vec4.fromValues(0, 0, 0, 1), 0);
+        ts.save(t);
         var depth = 0; // refers to number of times we have seen a [ before seeing a ]
         for(var i = 0; i < instructions.length; i++)
         {
@@ -76,14 +77,18 @@ class  LSystem extends Drawable
                 // increment depth, pop turtle off stack and operate on it
                 depth++;
                 t = ts.restore();
+                console.log("pop");
             } else if (rule === "]") {
                 // reset depth, push this turtle onto the stack
                 depth--;
                 ts.save(t);
+                console.log("push");
             }
         }
         // create
-        this.create();
+       // this.create();
+        this.turtleStack = ts;
+        console.log(instructions);
 
     }
 
