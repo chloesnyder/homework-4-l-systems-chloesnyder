@@ -78,6 +78,8 @@ loadTempPos(positions : any)
     this.loadTempPos(mesh.vertices);
     this.tempBufIdx = new Array(mesh.indices);
 
+//    console.log(this.tempBufNor);
+
   }
 
   create(){}

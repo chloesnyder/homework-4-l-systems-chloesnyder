@@ -24,6 +24,7 @@ class  TurtleStack
     branchIdx: Array<number> = new Array();
     branchPos: Array<Array<number>>= new Array<Array<number>>();
     branchNor: Array<Array<number>>= new Array<Array<number>>();
+    branchCount: number;
 
     constructor(t: Turtle)
     {
@@ -36,16 +37,24 @@ class  TurtleStack
         this.branchMesh.loadBuffers(this.readTextFile('src/objs/cube.obj'));
 
         var t_branchPos =  this.branchMesh.getTempPos();
+        console.log(t_branchPos);
         var t_branchNor =  this.branchMesh.getTempNor();
+        console.log(t_branchNor);
         this.branchIdx =  this.branchMesh.getTempIndices();
+        console.log(this.branchIdx);
+
+        // for some reason, branchIdx.length return 1
+        this.branchCount = this.branchMesh.getCount();
      
         // convert into an array of "vec4s"
-        for(var i = 0; i < this.branchIdx.length; i++)
+        for(var i = 0; i < this.branchCount; i++)
         {
             this.branchNor.push([t_branchNor[i * 3], t_branchNor[i * 3 + 1], t_branchNor[i * 3 + 2], 0]);
             this.branchPos.push([t_branchPos[i * 3], t_branchPos[i * 3 + 1], t_branchPos[i * 3 + 2], 0]);
         }
 
+        console.log(this.branchNor);
+        console.log(this.branchPos);
     }
    
     save(t: Turtle)
@@ -87,7 +96,6 @@ class  TurtleStack
     // Doesn't actually "draw" the cylinder, just moves it to the right place for the final VBO to draw all at once
     drawBranch()
     {
-        var currBranchIdx = new Array();
         var currBranchNor = new Array();
         var currBranchPos = new Array();
 
@@ -118,12 +126,18 @@ class  TurtleStack
             currBranchPos.push(transPositions[1]);
             currBranchPos.push(transPositions[2]);
             currBranchPos.push(transPositions[3]);
+           // console.log(currBranchPos);
         }
 
-        currBranchIdx = this.branchIdx;
-        this.indices.concat(currBranchIdx);
-        this.normals.concat(currBranchNor);
-        this.positions.concat(currBranchPos);
+
+        this.indices = this.indices.concat(this.branchIdx);
+        this.normals = this.normals.concat(currBranchNor);
+        console.log(currBranchPos);
+
+        // TODO: currBranchPos is being populated, but positions is still empty. why?
+        this.positions = this.positions.concat(currBranchPos);
+        console.log(this.positions);
+
         console.log("drew a branch");
 
     }

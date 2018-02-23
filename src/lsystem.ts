@@ -51,6 +51,10 @@ class  LSystem extends Drawable
     
         gl.bindBuffer(gl.ARRAY_BUFFER, this.bufPos);
         gl.bufferData(gl.ARRAY_BUFFER, this.positions, gl.STATIC_DRAW);
+
+        console.log(this.positions);
+        console.log(this.normals);
+        console.log(this.indices);
     }
 
     // Parses the instruction string to tell the turtle how to move
