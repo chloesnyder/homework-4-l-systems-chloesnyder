@@ -18,6 +18,7 @@ class  TurtleStack
     indices: Array<number> = new Array();
     positions: Array<number> = new Array();
     normals: Array<number> = new Array();
+    count: number;
     currTurtle: Turtle;
 
     branchMesh: Mesh;
@@ -37,25 +38,33 @@ class  TurtleStack
         this.branchMesh.loadBuffers(this.readTextFile('src/objs/cube.obj'));
 
         var t_branchPos =  this.branchMesh.getTempPos();
-        console.log(t_branchPos);
+      //  console.log(t_branchPos);
         var t_branchNor =  this.branchMesh.getTempNor();
-        console.log(t_branchNor);
-        this.branchIdx =  this.branchMesh.getTempIndices();
-        console.log(this.branchIdx);
+     //   console.log(t_branchNor);
+        var t_branchIdx =  this.branchMesh.getTempIndices();
+      //  console.log(t_branchIdx);
 
         // for some reason, branchIdx.length return 1
         this.branchCount = this.branchMesh.getCount();
-        console.log(this.branchCount);
      
         // convert into an array of "vec4s"
-        for(var i = 0; i < this.branchCount; i++)
+        for(var i = 0; i < this.branchCount; ++i)
         {
-            this.branchNor.push([t_branchNor[i * 3], t_branchNor[i * 3 + 1], t_branchNor[i * 3 + 2], 0]);
-            this.branchPos.push([t_branchPos[i * 3], t_branchPos[i * 3 + 1], t_branchPos[i * 3 + 2], 0]);
+            this.branchNor.push([t_branchNor[i * 3], t_branchNor[i * 3 + 1], t_branchNor[i * 3 + 2], 0.0]);
+            this.branchPos.push([t_branchPos[i * 3], t_branchPos[i * 3 + 1], t_branchPos[i * 3 + 2], 1.0]);
+        }
+
+        //offset indices
+        for(var j = 0; j < this.branchCount; j++)
+        {
+            this.branchIdx.push(t_branchIdx[j]);
         }
 
         console.log(this.branchNor);
         console.log(this.branchPos);
+        console.log(this.branchIdx);
+
+        this.count = 0;
     }
    
     save(t: Turtle)
@@ -99,7 +108,7 @@ class  TurtleStack
     {
         var currBranchNor = new Array();
         var currBranchPos = new Array();
-        var currBranchIdx = this.branchIdx;
+        var currBranchIdx = new Array();
 
         var currPos = this.currTurtle.getPosition();
         var currRot = this.currTurtle.getOrientation();
@@ -110,36 +119,42 @@ class  TurtleStack
         for(var i = 0; i < this.branchPos.length; i++)
         {
             var transPositions = vec4.fromValues(this.branchPos[i][0], this.branchPos[i][1], this.branchPos[i][2], 1.0);
-            var transNormals = vec4.create();
+            var transNormals = this.branchNor[i];//vec4.create();
 
             //transform brach pos based on current transformation (rotation and position) of turtle
-            transPositions = vec4.transformMat4(transPositions, transPositions, currTrans);
+         //   transPositions = vec4.transformMat4(transPositions, transPositions, currTrans);
             //rotate normals based on current turtle rotation
-            var mat4Rot =  mat4.create();
-            mat4.fromQuat(mat4Rot, currRot);
-            transNormals = vec4.transformMat4(transNormals, this.branchNor[i], mat4Rot);
+        //    var mat4Rot =  mat4.create();
+        //    mat4.fromQuat(mat4Rot, currRot);
+         //   transNormals = vec4.transformMat4(transNormals, this.branchNor[i], mat4Rot);
             
             // flatten into a temp VBO to append to final array
             currBranchNor.push(transNormals[0]);
             currBranchNor.push(transNormals[1]);
             currBranchNor.push(transNormals[2]);
-            currBranchNor.push(transNormals[3]);
+            currBranchNor.push(0.0);
             currBranchPos.push(transPositions[0]);
             currBranchPos.push(transPositions[1]);
             currBranchPos.push(transPositions[2]);
-            currBranchPos.push(transPositions[3]);
+            currBranchPos.push(1.0);
            // console.log(currBranchPos);
         }
 
+        for(var j = 0; j < this.branchCount; j++)
+        {
+            var offset = Math.floor(this.count / 4.0);
+            console.log(offset);
+            currBranchIdx.push(this.branchIdx[j] + offset); // or some reason index array pushes entire array instead of a single number. Look at how I'm setting indices again.
+        }
 
-        this.indices = this.indices.concat(currBranchIdx);
+       // this.indices = this.indices.concat(this.branchIdx);
         this.normals = this.normals.concat(currBranchNor);
-        console.log(currBranchPos);
-
-        // TODO: currBranchPos is being populated, but positions is still empty. why?
         this.positions = this.positions.concat(currBranchPos);
-        console.log(this.positions);
+        this.indices = this.indices.concat(currBranchIdx);
 
+        // update count for overall mesh
+        this.count += this.branchCount;
+  
         console.log("drew a branch");
 
     }

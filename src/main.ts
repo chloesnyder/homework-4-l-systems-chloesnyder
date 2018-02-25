@@ -21,7 +21,7 @@ const controls = {
   iterations: 5,
   angle : 30,
   distance : 1.0, 
-  axiom : "F",
+  axiom : "X",
   'Load LSystem': loadScene, // A function pointer, essentially
 };
 

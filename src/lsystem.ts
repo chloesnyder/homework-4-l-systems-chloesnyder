@@ -54,7 +54,8 @@ class  LSystem extends Drawable
 
         console.log(this.positions);
         console.log(this.normals);
-        console.log(this.indices);
+        console.log(this.indices); // INDICES IS ONLY 5, WHY?
+        console.log(this.turtleStack.indices); // this issomehow an array of arrays?
     }
 
     // Parses the instruction string to tell the turtle how to move
@@ -64,20 +65,27 @@ class  LSystem extends Drawable
         for(var i = 0; i < instructions.length; i++)
         {
             var rule = instructions.charAt(i);
+            // if(rule === "F")
+            // {
+            //     this.t.move("forward", angle, distance);
+            // } else if (rule === "B")
+            // {
+            //     this.t.move("backward", angle, distance);
+            // } else if (rule === "R") {
+            //     this.t.move("right", angle, distance);
+            // } else if (rule === "L") {
+            //     this.t.move("left", angle, distance);
+            // } else if (rule === "U") {
+            //     this.t.move("up", angle, distance);
+            // } else if (rule === "D") {
+            //     this.t.move("down", angle, distance);
             if(rule === "F")
             {
                 this.t.move("forward", angle, distance);
-            } else if (rule === "B")
-            {
-                this.t.move("backward", angle, distance);
-            } else if (rule === "R") {
+            } else if (rule === "+") {
                 this.t.move("right", angle, distance);
-            } else if (rule === "L") {
+            } else if (rule === "-") {
                 this.t.move("left", angle, distance);
-            } else if (rule === "U") {
-                this.t.move("up", angle, distance);
-            } else if (rule === "D") {
-                this.t.move("down", angle, distance);
             } else if (rule === "[") {
                 // increment depth, pop turtle off stack and operate on it
                 depth++;

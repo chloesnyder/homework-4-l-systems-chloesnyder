@@ -26,8 +26,18 @@ class  Rule
        var toReturn = "";
        var probability = Math.random();
 
+       if(currChar === "X")
+       {
+          // toReturn = "F[+X]F[-X]+X"
+          toReturn = "[F]";
+       } else if (currChar === "F")
+       {
+            //toReturn = "FF";
+            toReturn = "[F]";
+       }
+
         // change character based on some probability depending on the number iteration we are at
-        if(currChar === "F")
+      /*  if(currChar === "F")
         {
             if(probability < .5)
             {
@@ -73,7 +83,7 @@ class  Rule
             } else {
                 toReturn = "B";
             }
-        }
+        }*/
 
         return toReturn;
     }

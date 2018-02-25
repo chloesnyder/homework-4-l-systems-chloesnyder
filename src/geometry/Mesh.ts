@@ -55,17 +55,25 @@ loadTempPos(positions : any)
     }
   
     // convert from vec3 to vec4, insert a 0 in w postion
-    loadTempNor(normals : any) 
-    {     
-      for(var i = 0; i < normals.length; i++)
-      {
-        this.tempBufNor.push(normals[i]);
+loadTempNor(normals : any) 
+  {     
+    for(var i = 0; i < normals.length; i++)
+     {
+      this.tempBufNor.push(normals[i]);
         if((i + 1) % 3 == 0)
         {
           this.tempBufNor.push(0.0);
         }
       }
-    }
+}
+
+loadTempIdx(indices : any)
+{
+  for(var i = 0; i < indices.length; i++)
+  {
+    this.tempBufIdx.push(indices[i]);
+  }
+}
 
       // Loads relevant index, normal and position data but does not create the mesh
   loadBuffers(obj:string)
@@ -76,7 +84,7 @@ loadTempPos(positions : any)
     this.count = mesh.indices.length;
     this.loadTempNor(mesh.vertexNormals);
     this.loadTempPos(mesh.vertices);
-    this.tempBufIdx = new Array(mesh.indices);
+    this.loadTempIdx(mesh.indices); /// this might be causing problems, for some reason index array pushes entire array instead of a single number
 
 //    console.log(this.tempBufNor);
 
