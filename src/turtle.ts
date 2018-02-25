@@ -46,11 +46,11 @@ class  Turtle
     {
         if(direction === "right")
         {
-            this.rotateAboutY(degree);
+            this.rotateAboutX(degree);
             console.log("right");
         } else if (direction === "left")
         {
-            this.rotateAboutY(-degree);
+            this.rotateAboutX(-degree);
             console.log("left");
         } else if (direction === "down")
         {
@@ -71,8 +71,6 @@ class  Turtle
             this.moveForward(-length);
             console.log("backward");
         }
-
-       // this.moveForward(length);
         this.updateState();
     }
 

@@ -64,6 +64,7 @@ function loadScene() {
  // mesh.loadBuffers(readTextFile('src/objs/cube.obj'));
  // mesh.create();
   lsystem = new LSystem();
+  console.log(instructions);
   lsystem.parseLSystem(instructions, angle, distance);
   lsystem.create();
  

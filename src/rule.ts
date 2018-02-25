@@ -28,62 +28,16 @@ class  Rule
 
        if(currChar === "X")
        {
-          // toReturn = "F[+X]F[-X]+X"
-          toReturn = "[F]";
+           //toReturn = "F[+X]F[-X]+X"
+           toReturn = "F[+[*]]";
+           console.log(toReturn);
        } else if (currChar === "F")
        {
             //toReturn = "FF";
-            toReturn = "[F]";
+            toReturn = "[F[F*]]"
+            console.log(toReturn);
        }
 
-        // change character based on some probability depending on the number iteration we are at
-      /*  if(currChar === "F")
-        {
-            if(probability < .5)
-            {
-                toReturn = "[FF]";
-            } else {
-                toReturn = "FRU";
-            }
-           
-        } else if (currChar === "B") {
-            if(probability < .5)
-            {
-                toReturn = "BB";
-            } else {
-                toReturn = "BLD";
-            }
-
-        } else if (currChar === "U") {
-            if(probability < .5)
-            {
-                toReturn = "L";
-            } else {
-                toReturn = "R";
-            }
-
-        } else if (currChar === "D") {
-            if(probability < .5)
-            {
-                toReturn = "L";
-            } else {
-                toReturn = "R";
-            }
-        } else if (currChar === "R") {
-            if(probability < .5)
-            {
-                toReturn = "F";
-            } else {
-                toReturn = "B";
-            }
-        } else if (currChar === "L") {
-            if(probability < .5)
-            {
-                toReturn = "F";
-            } else {
-                toReturn = "B";
-            }
-        }*/
 
         return toReturn;
     }

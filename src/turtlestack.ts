@@ -27,6 +27,12 @@ class  TurtleStack
     branchNor: Array<Array<number>>= new Array<Array<number>>();
     branchCount: number;
 
+    leafMesh: Mesh;
+    leafIdx: Array<number> = new Array();
+    leafPos: Array<Array<number>>= new Array<Array<number>>();
+    leafNor: Array<Array<number>>= new Array<Array<number>>();
+    leafCount: number;
+
     constructor(t: Turtle)
     {
        // Instantiate stack with 1 turtle at the origin, moving straight up the Y axis
@@ -43,10 +49,10 @@ class  TurtleStack
 
         // for some reason, branchIdx.length return 1
         this.branchCount = this.branchMesh.getCount();
-        var numVerts = t_branchPos.length / 4.0;
+        var numBranchVerts = t_branchPos.length / 4.0;
      
         // convert into an array of "vec4s"
-        for(var i = 0; i < numVerts; i++)
+        for(var i = 0; i < numBranchVerts; i++)
         {
             this.branchNor.push([t_branchNor[i * 4], t_branchNor[i * 4 + 1], t_branchNor[i * 4 + 2], 0.0]);
             this.branchPos.push([t_branchPos[i * 4], t_branchPos[i * 4 + 1], t_branchPos[i * 4 + 2], 1.0]);
@@ -56,6 +62,28 @@ class  TurtleStack
         for(var j = 0; j < this.branchCount; j++)
         {
             this.branchIdx.push(t_branchIdx[j]);
+        }
+
+        // instance of leaf
+        this.leafMesh = new Mesh(vec3.fromValues(0, 0, 0));
+        this.leafMesh.loadBuffers(this.readTextFile('src/objs/sphere.obj'));
+
+        var t_leafPos = this.leafMesh.getTempPos();
+        var t_leafNor = this.leafMesh.getTempNor();
+        var t_leafIdx = this.leafMesh.getTempIndices();
+
+        this.leafCount = this.leafMesh.getCount();
+        var numLeafVerts = t_leafPos.length / 4.0;
+
+        for (var i = 0; i < numLeafVerts; i++)
+        {
+            this.leafNor.push([t_leafNor[i * 4], t_leafNor[i * 4 + 1], t_leafNor[i * 4 + 2], 0.0]);
+            this.leafPos.push([t_leafPos[i * 4], t_leafPos[i * 4 + 1], t_leafPos[i * 4 + 2], 1.0]);
+        }
+
+        for(var j = 0; j < this.leafCount; j++)
+        {
+            this.leafIdx.push(t_leafIdx[j]);
         }
 
         this.count = 0;
@@ -106,6 +134,8 @@ class  TurtleStack
 
         var currPos = this.currTurtle.getPosition();
         var currRot = this.currTurtle.getOrientation();
+        quat.normalize(currRot, currRot);
+        vec4.normalize(currPos, currPos);
         var currTrans = mat4.create();
         mat4.fromRotationTranslation(currTrans, currRot, vec3.fromValues(currPos[0], currPos[1], currPos[2]));
 
@@ -137,8 +167,8 @@ class  TurtleStack
 
         for(var j = 0; j < this.branchCount; j++)
         {
-            var offset = Math.floor(this.positions.length / 4.0);
-            currBranchIdx.push(this.branchIdx[j] + offset); // or some reason index array pushes entire array instead of a single number. Look at how I'm setting indices again.
+            var offset = Math.floor(this.positions.length / 4.0); // offset by vertex count
+            currBranchIdx.push(this.branchIdx[j] + offset); 
         }
 
         this.normals = this.normals.concat(currBranchNor);
@@ -157,6 +187,57 @@ class  TurtleStack
     drawLeaf()
     {
 
+
+        var currLeafNor = new Array();
+        var currLeafPos = new Array();
+        var currLeafIdx = new Array();
+
+        var currPos = this.currTurtle.getPosition();
+        var currRot = this.currTurtle.getOrientation();
+        quat.normalize(currRot, currRot);
+        vec4.normalize(currPos, currPos);
+        var currTrans = mat4.create();
+      //  mat4.fromRotationTranslation(currTrans, currRot, vec3.fromValues(currPos[0], currPos[1], currPos[2]));
+        mat4.fromRotationTranslationScale(currTrans, currRot, vec3.fromValues(currPos[0], currPos[1], currPos[2]), vec3.fromValues(.5, .5, .5));
+
+        // transform branch positions based on possition of the turtle
+        for(var i = 0; i < this.leafPos.length; i++)
+        {
+
+            var transPositions = vec4.fromValues(this.leafPos[i][0], this.leafPos[i][1], this.leafPos[i][2], 1.0);
+            var transNormals = vec4.create();
+
+            //transform brach pos based on current transformation (rotation and position) of turtle
+            transPositions = vec4.transformMat4(transPositions, transPositions, currTrans);
+            //rotate normals based on current turtle rotation
+            var mat4Rot =  mat4.create();
+            mat4.fromQuat(mat4Rot, currRot);
+            transNormals = vec4.transformMat4(transNormals, this.leafNor[i], mat4Rot);
+            
+            // flatten into a temp VBO to append to final array
+            currLeafNor.push(transNormals[0]);
+            currLeafNor.push(transNormals[1]);
+            currLeafNor.push(transNormals[2]);
+            currLeafNor.push(0.0);
+            currLeafPos.push(transPositions[0]);
+            currLeafPos.push(transPositions[1]);
+            currLeafPos.push(transPositions[2]);
+            currLeafPos.push(1.0);
+
+        }
+
+        for(var j = 0; j < this.leafCount; j++)
+        {
+            var offset = Math.floor(this.positions.length / 4.0); // offset by vertex count
+            currLeafIdx.push(this.leafIdx[j] + offset); 
+        }
+
+        this.normals = this.normals.concat(currLeafNor);
+        this.positions = this.positions.concat(currLeafPos);
+        this.indices = this.indices.concat(currLeafIdx);
+
+        this.count += this.leafCount;
+        console.log("drew a leaf");
     }
 
 }
