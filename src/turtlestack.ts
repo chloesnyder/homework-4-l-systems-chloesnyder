@@ -38,11 +38,8 @@ class  TurtleStack
         this.branchMesh.loadBuffers(this.readTextFile('src/objs/cube.obj'));
 
         var t_branchPos =  this.branchMesh.getTempPos();
-      //  console.log(t_branchPos);
         var t_branchNor =  this.branchMesh.getTempNor();
-     //   console.log(t_branchNor);
         var t_branchIdx =  this.branchMesh.getTempIndices();
-      //  console.log(t_branchIdx);
 
         // for some reason, branchIdx.length return 1
         this.branchCount = this.branchMesh.getCount();
@@ -60,10 +57,6 @@ class  TurtleStack
         {
             this.branchIdx.push(t_branchIdx[j]);
         }
-
-        console.log(this.branchNor);
-      //  console.log(this.branchPos);
-       // console.log(this.branchIdx);
 
         this.count = 0;
     }
@@ -119,24 +112,16 @@ class  TurtleStack
         // transform branch positions based on possition of the turtle
         for(var i = 0; i < this.branchPos.length; i++)
         {
-            currBranchNor.push(this.branchNor[i][0]);
-            currBranchNor.push(this.branchNor[i][1]);
-            currBranchNor.push(this.branchNor[i][2]);
-            currBranchNor.push(0.0);
 
-            currBranchPos.push(this.branchPos[i][0]);
-            currBranchPos.push(this.branchPos[i][1]);
-            currBranchPos.push(this.branchPos[i][2]);
-            currBranchPos.push(1.0);
-        /*    var transPositions = vec4.fromValues(this.branchPos[i][0], this.branchPos[i][1], this.branchPos[i][2], 1.0);
-            var transNormals = this.branchNor[i];//vec4.create();
+            var transPositions = vec4.fromValues(this.branchPos[i][0], this.branchPos[i][1], this.branchPos[i][2], 1.0);
+            var transNormals = vec4.create();
 
             //transform brach pos based on current transformation (rotation and position) of turtle
-         //   transPositions = vec4.transformMat4(transPositions, transPositions, currTrans);
+            transPositions = vec4.transformMat4(transPositions, transPositions, currTrans);
             //rotate normals based on current turtle rotation
-        //    var mat4Rot =  mat4.create();
-        //    mat4.fromQuat(mat4Rot, currRot);
-         //   transNormals = vec4.transformMat4(transNormals, this.branchNor[i], mat4Rot);
+            var mat4Rot =  mat4.create();
+            mat4.fromQuat(mat4Rot, currRot);
+            transNormals = vec4.transformMat4(transNormals, this.branchNor[i], mat4Rot);
             
             // flatten into a temp VBO to append to final array
             currBranchNor.push(transNormals[0]);
@@ -147,17 +132,15 @@ class  TurtleStack
             currBranchPos.push(transPositions[1]);
             currBranchPos.push(transPositions[2]);
             currBranchPos.push(1.0);
-           // console.log(currBranchPos);*/
+
         }
 
         for(var j = 0; j < this.branchCount; j++)
         {
-            var offset = Math.floor(this.count / 4.0);
-         //   console.log(offset);
+            var offset = Math.floor(this.positions.length / 4.0);
             currBranchIdx.push(this.branchIdx[j] + offset); // or some reason index array pushes entire array instead of a single number. Look at how I'm setting indices again.
         }
 
-       // this.indices = this.indices.concat(this.branchIdx);
         this.normals = this.normals.concat(currBranchNor);
         this.positions = this.positions.concat(currBranchPos);
         this.indices = this.indices.concat(currBranchIdx);
