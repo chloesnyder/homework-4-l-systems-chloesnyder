@@ -26,17 +26,27 @@ class  Rule
        var toReturn = "";
        var probability = Math.random();
 
-       if(currChar === "X")
+      if(currChar === "X")
        {
            //toReturn = "F[+X]F[-X]+X"
-           toReturn = "F[+[*]]";
+           toReturn = "F";//[+[*]]";
            console.log(toReturn);
        } else if (currChar === "F")
        {
             //toReturn = "FF";
-            toReturn = "[F[F*]]"
+           // toReturn = "[F[F*]]"
+          // toReturn = "F[-&<F][<++&F]|F[-&>F][+&F*]";
+          if(probability < .5) {
+            toReturn = "[F<[F*^*]]";
+          } else {
+            toReturn = "F[-&<F][<++&F]|F[-&>F][+&F]"//"[F>[F*&*]]";
+          }
             console.log(toReturn);
        }
+     /*  if(currChar === "F")
+       {
+           toReturn = "[F][[F]F]";
+       }*/
 
 
         return toReturn;

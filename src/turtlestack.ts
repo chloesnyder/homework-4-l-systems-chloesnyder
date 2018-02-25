@@ -21,6 +21,8 @@ class  TurtleStack
     count: number;
     currTurtle: Turtle;
 
+    depth: number;
+
     branchMesh: Mesh;
     branchIdx: Array<number> = new Array();
     branchPos: Array<Array<number>>= new Array<Array<number>>();
@@ -41,7 +43,7 @@ class  TurtleStack
 
         //instantiate an instance of branch
         this.branchMesh = new Mesh(vec3.fromValues(0, 0, 0));
-        this.branchMesh.loadBuffers(this.readTextFile('src/objs/cube.obj'));
+        this.branchMesh.loadBuffers(this.readTextFile('src/objs/cylinder.obj'));
 
         var t_branchPos =  this.branchMesh.getTempPos();
         var t_branchNor =  this.branchMesh.getTempNor();
@@ -87,6 +89,7 @@ class  TurtleStack
         }
 
         this.count = 0;
+        this.depth = 0;
     }
    
     save(t: Turtle)
@@ -97,7 +100,6 @@ class  TurtleStack
     restore() : Turtle
     {
         this.currTurtle = this.stack.pop();
-        this.drawBranch(); // store turtle VBOs in global VBO list
         console.log("restore");
         return this.currTurtle;
     }
@@ -137,7 +139,10 @@ class  TurtleStack
         quat.normalize(currRot, currRot);
         vec4.normalize(currPos, currPos);
         var currTrans = mat4.create();
-        mat4.fromRotationTranslation(currTrans, currRot, vec3.fromValues(currPos[0], currPos[1], currPos[2]));
+        // scale it based on depth
+        var scale = 1.0 / (this.depth + 1);
+        mat4.fromRotationTranslationScale(currTrans, currRot, vec3.fromValues(currPos[0], currPos[1], currPos[2]), vec3.fromValues(.5 * scale, 2 * scale, .5 * scale));
+        console.log(scale);
 
         // transform branch positions based on possition of the turtle
         for(var i = 0; i < this.branchPos.length; i++)
@@ -186,19 +191,23 @@ class  TurtleStack
     // Doesn't actually "draw" the leaf, just moves it to the right place for the final VBO to draw all at once
     drawLeaf()
     {
-
-
+        // need to translate to end of the branch
         var currLeafNor = new Array();
         var currLeafPos = new Array();
         var currLeafIdx = new Array();
 
+        var scale = 1.0 / (this.depth + 1);
+
         var currPos = this.currTurtle.getPosition();
+        var x = vec4.create();
+        vec4.add(currPos, currPos, vec4.multiply(x, vec4.fromValues(1.0, 2.0, 1.0, 1.9), this.currTurtle.getDirection()));
         var currRot = this.currTurtle.getOrientation();
         quat.normalize(currRot, currRot);
         vec4.normalize(currPos, currPos);
         var currTrans = mat4.create();
-      //  mat4.fromRotationTranslation(currTrans, currRot, vec3.fromValues(currPos[0], currPos[1], currPos[2]));
-        mat4.fromRotationTranslationScale(currTrans, currRot, vec3.fromValues(currPos[0], currPos[1], currPos[2]), vec3.fromValues(.5, .5, .5));
+        // scale it based on depth
+     
+        mat4.fromRotationTranslationScale(currTrans, currRot, vec3.fromValues(currPos[0], currPos[1], currPos[2]), vec3.fromValues(.5 * scale, .5 * scale, .5 * scale));
 
         // transform branch positions based on possition of the turtle
         for(var i = 0; i < this.leafPos.length; i++)

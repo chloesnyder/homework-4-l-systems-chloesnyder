@@ -44,30 +44,34 @@ class  Turtle
     // Move a turtle by specifying a direction to rotate the turtle, degree to rotate by, and how far to move forward
     move(direction: string, degree: number, length: number)
     {
-        if(direction === "right")
+        if(direction === "TR")
         {
-            this.rotateAboutX(degree);
-            console.log("right");
-        } else if (direction === "left")
+            this.rotateAboutY(degree);
+            console.log("turn right");
+        } else if (direction === "TL")
         {
-            this.rotateAboutX(-degree);
-            console.log("left");
-        } else if (direction === "down")
+            this.rotateAboutY(-degree);
+            console.log("turn left");
+        } else if (direction === "PL")
         {
             this.rotateAboutZ(-degree);
-            console.log("down");
-        } else if (direction === "up")
+            console.log("pitch left");
+        } else if (direction === "PR")
         {
             this.rotateAboutZ(degree);
-            console.log("up");
+            console.log("pitch right");
+        } else if (direction === "RR") {
+            this.rotateAboutX(degree);
+            console.log("roll right");
+        } else if (direction === "RL") {
+            this.rotateAboutX(-degree);
+            console.log("roll left");
         } else if (direction === "forward")
         {
-           // this.rotateAboutX(degree);
            this.moveForward(length);
             console.log("forward");
         } else if (direction === "backward")
         {
-           // this.rotateAboutX(-degree);
             this.moveForward(-length);
             console.log("backward");
         }

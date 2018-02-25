@@ -3,6 +3,7 @@ import TurtleStack from './turtlestack';
 import {vec3, vec4, mat3, mat4, quat} from 'gl-matrix';
 import Drawable from './rendering/gl/Drawable';
 import {gl} from './globals';
+import turtlestack from './turtlestack';
 
 const PI = Math.PI;
 const deg2rad = PI / 180.0;
@@ -79,6 +80,7 @@ class  LSystem extends Drawable
             
             if(rule === "F")
             {
+                this.turtleStack.drawBranch();
                 this.t.move("forward", angle, distance);
             } else if (rule === "+") {
                 this.t.move("TR", angle, distance);
@@ -93,17 +95,16 @@ class  LSystem extends Drawable
             } else if (rule === ">") {
                 this.t.move("RR", angle, distance);
             } else if (rule === "[") {
-                // increment depth, pop turtle off stack and operate on it
-                depth++;
+                // increment depth, push this turtle onto the stack
+                this.turtleStack.depth++;
                 this.turtleStack.save(this.t);
                 console.log("pop");
             } else if (rule === "]") {
-                // reset depth, push this turtle onto the stack
-                depth--;
+                // reset depth, pop turtle off stack and operate on it
+                this.turtleStack.depth--;
                 this.t = this.turtleStack.restore();
                 console.log("push");
             } else if (rule === "*")    {
-                this.t.move("forward", angle, distance);
                 this.turtleStack.drawLeaf();
             }
         }
