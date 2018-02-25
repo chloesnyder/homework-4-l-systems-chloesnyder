@@ -86,7 +86,29 @@ loadTempIdx(indices : any)
     this.loadTempPos(mesh.vertices);
     this.loadTempIdx(mesh.indices); /// this might be causing problems, for some reason index array pushes entire array instead of a single number
 
+    console.log(this.tempBufNor);
+ //   console.log(this.tempBufPos);
+ //   console.log(this.tempBufIdx);
+
 //    console.log(this.tempBufNor);
+
+/*   this.generateIdx();
+    this.generatePos();
+    this.generateNor();
+
+    this.count = mesh.indices.length;  
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(mesh.indices), gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufNor);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.tempBufNor), gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufPos);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.tempBufPos), gl.STATIC_DRAW);
+
+    console.log(`Created mesh`);
+    this.create();*/
 
   }
 
@@ -94,76 +116,3 @@ loadTempIdx(indices : any)
 };
 
 export default Mesh;
-
-// getIndices() : Uint32Array
-// {
-//   return this.indices;
-// }
-
-// getPositions() : Float32Array
-// {
-//   return this.positions;
-// }
-
-// getNormals() : Float32Array
-// {
-//   return this.normals;
-// }
-
-//   // Convert from vec3 to vec4, insert a 1 in the w position
-//   padMeshPos(positions : any) : Float32Array
-//   {
-  
-//     for(var i = 0; i < positions.length; i++)
-//     {
-//       this.tempBufPos.push(positions[i]);
-//       if((i + 1) % 3 == 0)
-//       {
-//         this.tempBufPos.push(1.0);
-//       }
-//     }
-//     console.log(new Float32Array(this.tempBufPos));
-//     return new Float32Array(this.tempBufPos);
-//   }
-
-//   // convert from vec3 to vec4, insert a 0 in w postion
-// padMeshNor(normals : any) : Float32Array
-//   {
-   
-//     for(var i = 0; i < normals.length; i++)
-//     {
-//       this.tempBufNor.push(normals[i]);
-//       if((i + 1) % 3 == 0)
-//       {
-//         this.tempBufNor.push(0.0);
-//       }
-//     }
-//     console.log(new Float32Array(this.tempBufNor));
-//     return new Float32Array(this.tempBufNor);
-//   }
-
-
-//   createMeshFromObjectString(obj:string) {
-
-//    // console.log(obj);
-//     var mesh = new OBJ.Mesh(obj);
-//     OBJ.initMeshBuffers(gl, mesh);
-
-//     this.generateIdx();
-//     this.generatePos();
-//     this.generateNor();
-
-//     this.count = mesh.indices.length;  
-//     console.log(this.count);
-//     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
-//     console.log(new Uint32Array(mesh.indices));
-//     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(mesh.indices), gl.STATIC_DRAW);
-
-//     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufNor);
-//     gl.bufferData(gl.ARRAY_BUFFER, this.padMeshNor(mesh.vertexNormals), gl.STATIC_DRAW);
-
-//     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufPos);
-//     gl.bufferData(gl.ARRAY_BUFFER, this.padMeshPos(mesh.vertices), gl.STATIC_DRAW);
-
-//     console.log(`Created mesh`);
-//   }

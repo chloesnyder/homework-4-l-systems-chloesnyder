@@ -62,15 +62,17 @@ class  Turtle
             console.log("up");
         } else if (direction === "forward")
         {
-            this.rotateAboutX(degree);
+           // this.rotateAboutX(degree);
+           this.moveForward(length);
             console.log("forward");
         } else if (direction === "backward")
         {
-            this.rotateAboutX(-degree);
+           // this.rotateAboutX(-degree);
+            this.moveForward(-length);
             console.log("backward");
         }
 
-        this.moveForward(length);
+       // this.moveForward(length);
         this.updateState();
     }
 

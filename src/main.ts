@@ -30,6 +30,27 @@ let square: Square;
 let lsystem: LSystem;
 let mesh: Mesh;
 
+ //https://stackoverflow.com/questions/14446447/how-to-read-a-local-text-file
+ function readTextFile(file: string) : string
+ {
+     var text = "";
+     var rawFile = new XMLHttpRequest();
+     rawFile.open("GET", file, false);
+     rawFile.onreadystatechange = function ()
+     {
+         if(rawFile.readyState === 4)
+         {
+             if(rawFile.status === 200 || rawFile.status == 0)
+             {
+                 var allText = rawFile.responseText;
+                 text = allText;
+             }
+         }
+     }
+     rawFile.send(null);
+     return text;
+ }
+
 function loadScene() {
   
   var numIter = controls.iterations; 
@@ -38,6 +59,10 @@ function loadScene() {
   var distance = controls.distance; 
 
   var instructions = new Rule().createLSystem(numIter, axiom);
+
+  mesh = new Mesh(vec3.create());
+ // mesh.loadBuffers(readTextFile('src/objs/cube.obj'));
+ // mesh.create();
   lsystem = new LSystem();
   lsystem.parseLSystem(instructions, angle, distance);
   lsystem.create();
@@ -92,8 +117,8 @@ function main() {
     stats.begin();
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
     renderer.clear();
-    renderer.render(camera, lambert, [ lsystem,
-      //lsystem, 
+    renderer.render(camera, lambert, [// mesh,
+      lsystem, 
     ]);
     stats.end();
 

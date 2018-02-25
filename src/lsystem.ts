@@ -52,16 +52,16 @@ class  LSystem extends Drawable
         gl.bindBuffer(gl.ARRAY_BUFFER, this.bufPos);
         gl.bufferData(gl.ARRAY_BUFFER, this.positions, gl.STATIC_DRAW);
 
-        console.log(this.positions);
+//        console.log(this.positions);
         console.log(this.normals);
-        console.log(this.indices); // INDICES IS ONLY 5, WHY?
-        console.log(this.turtleStack.indices); // this issomehow an array of arrays?
+//        console.log(this.indices); 
     }
 
     // Parses the instruction string to tell the turtle how to move
     parseLSystem(instructions: string, angle: number, distance: number)
     {
-        var depth = 0; // refers to number of times we have seen a [ before seeing a ]
+        this.turtleStack.drawBranch();
+      /*  var depth = 0; // refers to number of times we have seen a [ before seeing a ]
         for(var i = 0; i < instructions.length; i++)
         {
             var rule = instructions.charAt(i);
@@ -99,7 +99,7 @@ class  LSystem extends Drawable
             }
         }
         console.log(instructions);
-
+*/
     }
 
 

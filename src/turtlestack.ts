@@ -46,12 +46,13 @@ class  TurtleStack
 
         // for some reason, branchIdx.length return 1
         this.branchCount = this.branchMesh.getCount();
+        var numVerts = t_branchPos.length / 4.0;
      
         // convert into an array of "vec4s"
-        for(var i = 0; i < this.branchCount; ++i)
+        for(var i = 0; i < numVerts; i++)
         {
-            this.branchNor.push([t_branchNor[i * 3], t_branchNor[i * 3 + 1], t_branchNor[i * 3 + 2], 0.0]);
-            this.branchPos.push([t_branchPos[i * 3], t_branchPos[i * 3 + 1], t_branchPos[i * 3 + 2], 1.0]);
+            this.branchNor.push([t_branchNor[i * 4], t_branchNor[i * 4 + 1], t_branchNor[i * 4 + 2], 0.0]);
+            this.branchPos.push([t_branchPos[i * 4], t_branchPos[i * 4 + 1], t_branchPos[i * 4 + 2], 1.0]);
         }
 
         //offset indices
@@ -61,8 +62,8 @@ class  TurtleStack
         }
 
         console.log(this.branchNor);
-        console.log(this.branchPos);
-        console.log(this.branchIdx);
+      //  console.log(this.branchPos);
+       // console.log(this.branchIdx);
 
         this.count = 0;
     }
@@ -118,7 +119,16 @@ class  TurtleStack
         // transform branch positions based on possition of the turtle
         for(var i = 0; i < this.branchPos.length; i++)
         {
-            var transPositions = vec4.fromValues(this.branchPos[i][0], this.branchPos[i][1], this.branchPos[i][2], 1.0);
+            currBranchNor.push(this.branchNor[i][0]);
+            currBranchNor.push(this.branchNor[i][1]);
+            currBranchNor.push(this.branchNor[i][2]);
+            currBranchNor.push(0.0);
+
+            currBranchPos.push(this.branchPos[i][0]);
+            currBranchPos.push(this.branchPos[i][1]);
+            currBranchPos.push(this.branchPos[i][2]);
+            currBranchPos.push(1.0);
+        /*    var transPositions = vec4.fromValues(this.branchPos[i][0], this.branchPos[i][1], this.branchPos[i][2], 1.0);
             var transNormals = this.branchNor[i];//vec4.create();
 
             //transform brach pos based on current transformation (rotation and position) of turtle
@@ -137,13 +147,13 @@ class  TurtleStack
             currBranchPos.push(transPositions[1]);
             currBranchPos.push(transPositions[2]);
             currBranchPos.push(1.0);
-           // console.log(currBranchPos);
+           // console.log(currBranchPos);*/
         }
 
         for(var j = 0; j < this.branchCount; j++)
         {
             var offset = Math.floor(this.count / 4.0);
-            console.log(offset);
+         //   console.log(offset);
             currBranchIdx.push(this.branchIdx[j] + offset); // or some reason index array pushes entire array instead of a single number. Look at how I'm setting indices again.
         }
 
