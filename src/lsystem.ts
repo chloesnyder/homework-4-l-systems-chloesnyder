@@ -80,7 +80,7 @@ class  LSystem extends Drawable
         {
             var rule = instructions.charAt(i);
             
-            var scale = 2.0;//this.turtleStack.iterScale;
+            var scale = 2.0 * (this.turtleStack.depth + 1.0);// 2.0;//this.turtleStack.iterScale;
             if(rule === "F")
             {
                 this.turtleStack.drawBranch();
@@ -108,6 +108,7 @@ class  LSystem extends Drawable
                 this.t = this.turtleStack.restore();
                 console.log("pop");
             } else if (rule === "*")    {
+                //this.t.move("forward", angle, 2 * distance / scale);
                 this.turtleStack.drawLeaf();
             } else if (rule === "S") {
                 //increase scale factor based on number of iterations

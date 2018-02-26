@@ -38,7 +38,12 @@ class  Rule
           } else {
             toReturn = "F[-&<F][<++&F]|F[-&>F][+&F]"//"[F>[F*&*]]";
           }*/
-          toReturn = "F[-F][+F]";
+          if(probability < .5)
+          {
+            toReturn = ">F[&-F][+F][<F][>F]";
+          } else {
+            toReturn = "<F[^<F][>F][-F][+F]";
+          }
           //  console.log(toReturn);
        } else {
            toReturn = currChar;
@@ -54,7 +59,7 @@ class  Rule
         var newstr = "";
         for(var ch = 0; ch < oldStr.length; ch++)
         {
-            newstr = newstr + this.applyRules(ch, oldStr, iter);// + "S";
+            newstr = newstr + this.applyRules(ch, oldStr, iter);
         }
         console.log(newstr);
         return newstr;

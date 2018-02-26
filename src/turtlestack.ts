@@ -132,6 +132,8 @@ class  TurtleStack
 
     // TODO: draw the lsystem branches
     // Doesn't actually "draw" the cylinder, just moves it to the right place for the final VBO to draw all at once
+    static drawBranch__transNormals = vec4.create();
+    static drawBranch__mat4Rot =  mat4.create();
     drawBranch()
     {
         var currBranchNor = new Array();
@@ -144,8 +146,8 @@ class  TurtleStack
        // vec4.normalize(currPos, currPos);
         var currTrans = mat4.create();
         // scale it based on depth
-        var scale =  1.0 ;// (this.depth + 1);
-        mat4.fromRotationTranslationScale(currTrans, currRot, vec3.fromValues(currPos[0], currPos[1], currPos[2]), vec3.fromValues(scale, scale, scale));
+        var scale =  1.0 / (this.depth + 1);
+        mat4.fromRotationTranslationScale(currTrans, currRot, vec3.fromValues(currPos[0], currPos[1], currPos[2]), vec3.fromValues(.5 * scale, scale, .5 * scale));
         console.log(scale);
 
         // transform branch positions based on possition of the turtle
@@ -153,12 +155,12 @@ class  TurtleStack
         {
 
             var transPositions = vec4.fromValues(this.branchPos[i][0], this.branchPos[i][1], this.branchPos[i][2], 1.0);
-            var transNormals = vec4.create();
+            var transNormals = TurtleStack.drawBranch__transNormals;
 
             //transform brach pos based on current transformation (rotation and position) of turtle
             transPositions = vec4.transformMat4(transPositions, transPositions, currTrans);
             //rotate normals based on current turtle rotation
-            var mat4Rot =  mat4.create();
+            var mat4Rot =  TurtleStack.drawBranch__mat4Rot;
             mat4.fromQuat(mat4Rot, currRot);
             transNormals = vec4.transformMat4(transNormals, this.branchNor[i], mat4Rot);
             
@@ -200,7 +202,7 @@ class  TurtleStack
         var currLeafPos = new Array();
         var currLeafIdx = new Array();
 
-        var scale = 1.0 / 1.0;//(this.depth + 1.0);
+        var scale =  1.0 / (this.depth + 1);
 
         var currPos = this.currTurtle.getPosition();
         var x = vec4.create();
