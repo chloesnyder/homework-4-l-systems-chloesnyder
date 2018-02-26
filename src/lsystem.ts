@@ -108,7 +108,7 @@ class  LSystem extends Drawable
                 this.t = this.turtleStack.restore();
                 console.log("pop");
             } else if (rule === "*")    {
-                //this.t.move("forward", angle, 2 * distance / scale);
+                this.t.move("forward", 0, 20 * distance);
                 this.turtleStack.drawLeaf();
             } else if (rule === "S") {
                 //increase scale factor based on number of iterations

@@ -84,11 +84,11 @@ class  Turtle
     }
 
     // move the turtle forward a specific length
+    static scaled = vec4.create();
     moveForward(length: number)
     {
-        var scaled = vec4.create();
-        vec4.scale(scaled, this.direction, length);
-        vec4.add(this.position, this.position, scaled); // is this the right order?
+        vec4.scale(Turtle.scaled, this.direction, length);
+        vec4.add(this.position, this.position, Turtle.scaled); // is this the right order?
     }
 
     applyRotation()
@@ -97,27 +97,25 @@ class  Turtle
     }
 
     // Unsure about order of multiplication
+    static q = quat.create();
     rotateAboutX(degree: number)
     {
-        var q = quat.create();
-        quat.setAxisAngle(q, this.x_axis, degree * deg2rad);
-        this.orientation = quat.multiply(this.orientation, this.orientation, q); // is this the right order?
+        quat.setAxisAngle(Turtle.q, this.x_axis, degree * deg2rad);
+        this.orientation = quat.multiply(this.orientation, this.orientation, Turtle.q); // is this the right order?
         this.applyRotation();
     }
 
     rotateAboutY(degree: number)
     {
-        var q = quat.create();
-        quat.setAxisAngle(q, this.y_axis, degree * deg2rad);
-        this.orientation = quat.multiply(this.orientation, this.orientation, q); // is this the right order?
+        quat.setAxisAngle(Turtle.q, this.y_axis, degree * deg2rad);
+        this.orientation = quat.multiply(this.orientation, this.orientation, Turtle.q); // is this the right order?
         this.applyRotation();
     }
 
     rotateAboutZ(degree: number)
     {
-        var q = quat.create();
-        quat.setAxisAngle(q, this.z_axis, degree * deg2rad);
-        this.orientation = quat.multiply(this.orientation, this.orientation, q); // is this the right order?
+        quat.setAxisAngle(Turtle.q, this.z_axis, degree * deg2rad);
+        this.orientation = quat.multiply(this.orientation, this.orientation, Turtle.q); // is this the right order?
         this.applyRotation();  
     }
 

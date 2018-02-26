@@ -143,7 +143,7 @@ class  TurtleStack
         var currPos = this.currTurtle.getPosition();
         var currRot = this.currTurtle.getOrientation();
         quat.normalize(currRot, currRot);
-       // vec4.normalize(currPos, currPos);
+ 
         var currTrans = mat4.create();
         // scale it based on depth
         var scale =  1.0 / (this.depth + 1);
@@ -193,8 +193,10 @@ class  TurtleStack
 
     }
 
-    // TODO: draw leaf
+    
     // Doesn't actually "draw" the leaf, just moves it to the right place for the final VBO to draw all at once
+    static drawLeaf__transNormals = vec4.create();
+    static drawLeaf__mat4Rot =  mat4.create();
     drawLeaf()
     {
         // need to translate to end of the branch
@@ -205,8 +207,8 @@ class  TurtleStack
         var scale =  1.0 / (this.depth + 1);
 
         var currPos = this.currTurtle.getPosition();
-        var x = vec4.create();
-        vec4.add(currPos, currPos, vec4.multiply(x, vec4.fromValues(1.0, 2.0, 1.0, 1.9), this.currTurtle.getDirection()));
+     //   var x = vec4.create();
+     //   vec4.add(currPos, currPos, vec4.multiply(x, vec4.fromValues(1.0, 2.0, 1.0, 1.0), this.currTurtle.getDirection()));
         var currRot = this.currTurtle.getOrientation();
         quat.normalize(currRot, currRot);
         vec4.normalize(currPos, currPos);
@@ -220,12 +222,12 @@ class  TurtleStack
         {
 
             var transPositions = vec4.fromValues(this.leafPos[i][0], this.leafPos[i][1], this.leafPos[i][2], 1.0);
-            var transNormals = vec4.create();
+            var transNormals = TurtleStack.drawLeaf__transNormals;
 
             //transform brach pos based on current transformation (rotation and position) of turtle
             transPositions = vec4.transformMat4(transPositions, transPositions, currTrans);
             //rotate normals based on current turtle rotation
-            var mat4Rot =  mat4.create();
+            var mat4Rot =  TurtleStack.drawLeaf__mat4Rot;
             mat4.fromQuat(mat4Rot, currRot);
             transNormals = vec4.transformMat4(transNormals, this.leafNor[i], mat4Rot);
             
