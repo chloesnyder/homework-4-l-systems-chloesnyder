@@ -46,11 +46,11 @@ class  Turtle
     {
         if(direction === "TR")
         {
-            this.rotateAboutY(degree);
+            this.rotateAboutX(degree);
             console.log("turn right");
         } else if (direction === "TL")
         {
-            this.rotateAboutY(-degree);
+            this.rotateAboutX(-degree);
             console.log("turn left");
         } else if (direction === "PL")
         {
@@ -61,10 +61,10 @@ class  Turtle
             this.rotateAboutZ(degree);
             console.log("pitch right");
         } else if (direction === "RR") {
-            this.rotateAboutX(degree);
+            this.rotateAboutY(degree);
             console.log("roll right");
         } else if (direction === "RL") {
-            this.rotateAboutX(-degree);
+            this.rotateAboutY(-degree);
             console.log("roll left");
         } else if (direction === "forward")
         {
@@ -101,7 +101,7 @@ class  Turtle
     {
         var q = quat.create();
         quat.setAxisAngle(q, this.x_axis, degree * deg2rad);
-        this.orientation = quat.multiply(this.orientation, q, this.orientation); // is this the right order?
+        this.orientation = quat.multiply(this.orientation, this.orientation, q); // is this the right order?
         this.applyRotation();
     }
 
@@ -109,7 +109,7 @@ class  Turtle
     {
         var q = quat.create();
         quat.setAxisAngle(q, this.y_axis, degree * deg2rad);
-        this.orientation = quat.multiply(this.orientation, q, this.orientation); // is this the right order?
+        this.orientation = quat.multiply(this.orientation, this.orientation, q); // is this the right order?
         this.applyRotation();
     }
 
@@ -117,7 +117,7 @@ class  Turtle
     {
         var q = quat.create();
         quat.setAxisAngle(q, this.z_axis, degree * deg2rad);
-        this.orientation = quat.multiply(this.orientation, q, this.orientation); // is this the right order?
+        this.orientation = quat.multiply(this.orientation, this.orientation, q); // is this the right order?
         this.applyRotation();  
     }
 

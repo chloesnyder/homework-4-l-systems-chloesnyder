@@ -35,6 +35,8 @@ class  TurtleStack
     leafNor: Array<Array<number>>= new Array<Array<number>>();
     leafCount: number;
 
+    iterScale: number;
+
     constructor(t: Turtle)
     {
        // Instantiate stack with 1 turtle at the origin, moving straight up the Y axis
@@ -90,6 +92,7 @@ class  TurtleStack
 
         this.count = 0;
         this.depth = 0;
+        this.iterScale = 0;
     }
    
     save(t: Turtle)
@@ -99,7 +102,8 @@ class  TurtleStack
 
     restore() : Turtle
     {
-        this.currTurtle = this.stack.pop();
+        var t = this.stack.pop();
+        this.currTurtle = new Turtle(vec4.clone(t.position), quat.clone(t.orientation));
         console.log("restore");
         return this.currTurtle;
     }
@@ -137,11 +141,11 @@ class  TurtleStack
         var currPos = this.currTurtle.getPosition();
         var currRot = this.currTurtle.getOrientation();
         quat.normalize(currRot, currRot);
-        vec4.normalize(currPos, currPos);
+       // vec4.normalize(currPos, currPos);
         var currTrans = mat4.create();
         // scale it based on depth
-        var scale = 1.0 / (this.depth + 1);
-        mat4.fromRotationTranslationScale(currTrans, currRot, vec3.fromValues(currPos[0], currPos[1], currPos[2]), vec3.fromValues(.5 * scale, 2 * scale, .5 * scale));
+        var scale =  1.0 ;// (this.depth + 1);
+        mat4.fromRotationTranslationScale(currTrans, currRot, vec3.fromValues(currPos[0], currPos[1], currPos[2]), vec3.fromValues(scale, scale, scale));
         console.log(scale);
 
         // transform branch positions based on possition of the turtle
@@ -196,7 +200,7 @@ class  TurtleStack
         var currLeafPos = new Array();
         var currLeafIdx = new Array();
 
-        var scale = 1.0 / (this.depth + 1);
+        var scale = 1.0 / 1.0;//(this.depth + 1.0);
 
         var currPos = this.currTurtle.getPosition();
         var x = vec4.create();

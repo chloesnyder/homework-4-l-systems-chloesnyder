@@ -72,40 +72,46 @@ class  LSystem extends Drawable
         [ = save state
         ] = restore state
         * = draw leaf*/
+
+        console.log(instructions);
         
        var depth = 0; // refers to number of times we have seen a [ before seeing a ]
        for(var i = 0; i < instructions.length; i++)
         {
             var rule = instructions.charAt(i);
             
+            var scale = 2.0;//this.turtleStack.iterScale;
             if(rule === "F")
             {
                 this.turtleStack.drawBranch();
-                this.t.move("forward", angle, distance);
+                this.t.move("forward", angle, distance / scale);
             } else if (rule === "+") {
-                this.t.move("TR", angle, distance);
+                this.t.move("TR", angle, distance / scale );
             } else if (rule === "-") {
-                this.t.move("TL", angle, distance);
+                this.t.move("TL", angle, distance / scale);
             } else if (rule === "&") {
-                this.t.move("PD", angle, distance);
+                this.t.move("PD", angle, distance/ scale);
             } else if (rule === "^") {
-                this.t.move("PU", angle, distance);
+                this.t.move("PU", angle, distance/ scale);
             } else if (rule === "<") {
-                this.t.move("RL", angle, distance);
+                this.t.move("RL", angle, distance/ scale);
             } else if (rule === ">") {
-                this.t.move("RR", angle, distance);
+                this.t.move("RR", angle, distance/ scale);
             } else if (rule === "[") {
                 // increment depth, push this turtle onto the stack
                 this.turtleStack.depth++;
-                this.turtleStack.save(this.t);
-                console.log("pop");
+                this.turtleStack.save(new Turtle(vec4.clone(this.t.position), quat.clone(this.t.orientation)));
+                console.log("push");
             } else if (rule === "]") {
                 // reset depth, pop turtle off stack and operate on it
                 this.turtleStack.depth--;
                 this.t = this.turtleStack.restore();
-                console.log("push");
+                console.log("pop");
             } else if (rule === "*")    {
                 this.turtleStack.drawLeaf();
+            } else if (rule === "S") {
+                //increase scale factor based on number of iterations
+               // this.turtleStack.iterScale++;
             }
         }
         console.log(instructions);

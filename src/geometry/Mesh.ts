@@ -84,31 +84,7 @@ loadTempIdx(indices : any)
     this.count = mesh.indices.length;
     this.loadTempNor(mesh.vertexNormals);
     this.loadTempPos(mesh.vertices);
-    this.loadTempIdx(mesh.indices); /// this might be causing problems, for some reason index array pushes entire array instead of a single number
-
-    console.log(this.tempBufNor);
- //   console.log(this.tempBufPos);
- //   console.log(this.tempBufIdx);
-
-//    console.log(this.tempBufNor);
-
-/*   this.generateIdx();
-    this.generatePos();
-    this.generateNor();
-
-    this.count = mesh.indices.length;  
-
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(mesh.indices), gl.STATIC_DRAW);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufNor);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.tempBufNor), gl.STATIC_DRAW);
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufPos);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.tempBufPos), gl.STATIC_DRAW);
-
-    console.log(`Created mesh`);
-    this.create();*/
+    this.loadTempIdx(mesh.indices);
 
   }
 

@@ -19,9 +19,6 @@ class  Rule
     // The rules stating how to expand the original string
     applyRules(ch: number, str: string, iter: number) : string
     {
-        // eventually modify this so that iteration matters, i.e. later iterations = more flowers?
-        // TODO: flowers
-
        var currChar = str.charAt(ch);
        var toReturn = "";
        var probability = Math.random();
@@ -36,17 +33,14 @@ class  Rule
             //toReturn = "FF";
            // toReturn = "[F[F*]]"
           // toReturn = "F[-&<F][<++&F]|F[-&>F][+&F*]";
-          if(probability < .5) {
+         /* if(probability < .5) {
             toReturn = "[F<[F*^*]]";
           } else {
             toReturn = "F[-&<F][<++&F]|F[-&>F][+&F]"//"[F>[F*&*]]";
-          }
+          }*/
+          toReturn = "F[-F][+F]";
             console.log(toReturn);
        }
-     /*  if(currChar === "F")
-       {
-           toReturn = "[F][[F]F]";
-       }*/
 
 
         return toReturn;
@@ -55,10 +49,10 @@ class  Rule
     // Process initial string and expand based on rules
     processString(oldStr: string, iter: number) : string
     {
-        var newstr = "";
+        var newstr = oldStr;
         for(var ch = 0; ch < oldStr.length; ch++)
         {
-            newstr = newstr + this.applyRules(ch, oldStr, iter);
+            newstr = newstr + this.applyRules(ch, oldStr, iter);// + "S";
         }
         return newstr;
     }
