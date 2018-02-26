@@ -27,7 +27,7 @@ class  Rule
        {
            //toReturn = "F[+X]F[-X]+X"
            toReturn = "F";//[+[*]]";
-           console.log(toReturn);
+          // console.log(toReturn);
        } else if (currChar === "F")
        {
             //toReturn = "FF";
@@ -39,7 +39,9 @@ class  Rule
             toReturn = "F[-&<F][<++&F]|F[-&>F][+&F]"//"[F>[F*&*]]";
           }*/
           toReturn = "F[-F][+F]";
-            console.log(toReturn);
+          //  console.log(toReturn);
+       } else {
+           toReturn = currChar;
        }
 
 
@@ -49,11 +51,12 @@ class  Rule
     // Process initial string and expand based on rules
     processString(oldStr: string, iter: number) : string
     {
-        var newstr = oldStr;
+        var newstr = "";
         for(var ch = 0; ch < oldStr.length; ch++)
         {
             newstr = newstr + this.applyRules(ch, oldStr, iter);// + "S";
         }
+        console.log(newstr);
         return newstr;
     }
 
