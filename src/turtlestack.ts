@@ -45,7 +45,7 @@ class  TurtleStack
 
         //instantiate an instance of branch
         this.branchMesh = new Mesh(vec3.fromValues(0, 0, 0));
-        this.branchMesh.loadBuffers(this.readTextFile('src/objs/cylinder.obj'));
+        this.branchMesh.loadBuffers(this.readTextFile('src/objs/branch.obj'));
 
         var t_branchPos =  this.branchMesh.getTempPos();
         var t_branchNor =  this.branchMesh.getTempNor();
