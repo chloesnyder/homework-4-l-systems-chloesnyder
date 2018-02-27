@@ -29,15 +29,15 @@ class  Rule
        } else if (currChar === "F")
        {
   
-         /* if(probability < .3)
+         if(probability < .3)
           {
-            toReturn = "F[&-F][+F][<F][>F][F]*";
+            toReturn = "F[&-F][+F][<F][>F][F*]";
           } else if (probability > .3 && probability < .6){
-            toReturn = "F[^<F][>F][-F][+F][F]";
+            toReturn = "F[^<F][>F][-F][+F][F*]";
           } else {
-              toReturn = "F&[^<F][>F][-F][+F][F]"
-          }*/
-          toReturn = "F[&-F][+F][<F][>F][F][F*]";
+              toReturn = "F[^<F][>F][-F][+F][F*]"
+          }
+          //toReturn = "F[&-F][+F][<F][>F][F][F*]";
           //  console.log(toReturn);
        } else {
            toReturn = currChar;

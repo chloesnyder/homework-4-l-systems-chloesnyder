@@ -83,23 +83,23 @@ class  LSystem extends Drawable
         {
             var rule = instructions.charAt(i);
             
-            var scale = 2.0 * (this.turtleStack.depth + 1.0);// 2.0;//this.turtleStack.iterScale;
+            var scale = distance / (2.0 * (this.turtleStack.depth + 1.0));
             if(rule === "F")
             {
                 this.turtleStack.drawBranch();
-                this.t.move("forward", angle, distance / scale);
+                this.t.move("forward", angle, scale);
             } else if (rule === "+") {
-                this.t.move("TR", angle, distance / scale );
+                this.t.move("TR", angle, scale);
             } else if (rule === "-") {
-                this.t.move("TL", angle, distance / scale);
+                this.t.move("TL", angle, scale);
             } else if (rule === "&") {
-                this.t.move("PD", angle, distance/ scale);
+                this.t.move("PD", angle, scale);
             } else if (rule === "^") {
-                this.t.move("PU", angle, distance/ scale);
+                this.t.move("PU", angle, scale);
             } else if (rule === "<") {
-                this.t.move("RL", angle, distance/ scale);
+                this.t.move("RL", angle, scale);
             } else if (rule === ">") {
-                this.t.move("RR", angle, distance/ scale);
+                this.t.move("RR", angle, scale);
             } else if (rule === "[") {
                 // increment depth, push this turtle onto the stack
                 this.turtleStack.depth++;
@@ -112,7 +112,7 @@ class  LSystem extends Drawable
                 console.log("pop");
             } else if (rule === "*")    {
                 this.turtleStack.drawLeaf();
-                this.t.move("forward", angle, distance / scale);
+                this.t.move("forward", angle, scale);
             } 
         }
         console.log(instructions);
