@@ -20,6 +20,7 @@ class  LSystem extends Drawable
     indices: Uint32Array;
     positions: Float32Array;
     normals: Float32Array;
+  //  colors: Floar32Array;
     center: vec4;
 
     turtleStack: TurtleStack;
@@ -38,10 +39,12 @@ class  LSystem extends Drawable
         this.indices = new Uint32Array(this.turtleStack.indices);
         this.normals = new Float32Array(this.turtleStack.normals);
         this.positions = new Float32Array(this.turtleStack.positions);
+       // this.colors
 
         this.generateIdx();
         this.generatePos();
         this.generateNor();
+       // this.generateColor();
     
         this.count = this.indices.length;
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
@@ -108,12 +111,9 @@ class  LSystem extends Drawable
                 this.t = this.turtleStack.restore();
                 console.log("pop");
             } else if (rule === "*")    {
-                this.t.move("forward", 0, 20 * distance);
                 this.turtleStack.drawLeaf();
-            } else if (rule === "S") {
-                //increase scale factor based on number of iterations
-               // this.turtleStack.iterScale++;
-            }
+                this.t.move("forward", angle, distance / scale);
+            } 
         }
         console.log(instructions);
 

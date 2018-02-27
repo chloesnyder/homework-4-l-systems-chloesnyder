@@ -25,25 +25,19 @@ class  Rule
 
       if(currChar === "X")
        {
-           //toReturn = "F[+X]F[-X]+X"
-           toReturn = "F";//[+[*]]";
-          // console.log(toReturn);
+           toReturn = "F";
        } else if (currChar === "F")
        {
-            //toReturn = "FF";
-           // toReturn = "[F[F*]]"
-          // toReturn = "F[-&<F][<++&F]|F[-&>F][+&F*]";
-         /* if(probability < .5) {
-            toReturn = "[F<[F*^*]]";
-          } else {
-            toReturn = "F[-&<F][<++&F]|F[-&>F][+&F]"//"[F>[F*&*]]";
-          }*/
-          if(probability < .5)
+  
+         /* if(probability < .3)
           {
-            toReturn = "F[&-F][+F][<F][>F]";
+            toReturn = "F[&-F][+F][<F][>F][F]*";
+          } else if (probability > .3 && probability < .6){
+            toReturn = "F[^<F][>F][-F][+F][F]";
           } else {
-            toReturn = "F[^<F][>F][-F][+F]";
-          }
+              toReturn = "F&[^<F][>F][-F][+F][F]"
+          }*/
+          toReturn = "F[&-F][+F][<F][>F][F][F*]";
           //  console.log(toReturn);
        } else {
            toReturn = currChar;

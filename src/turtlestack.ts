@@ -70,7 +70,7 @@ class  TurtleStack
 
         // instance of leaf
         this.leafMesh = new Mesh(vec3.fromValues(0, 0, 0));
-        this.leafMesh.loadBuffers(this.readTextFile('src/objs/sphere.obj'));
+        this.leafMesh.loadBuffers(this.readTextFile('src/objs/leaf.obj'));
 
         var t_leafPos = this.leafMesh.getTempPos();
         var t_leafNor = this.leafMesh.getTempNor();
@@ -207,11 +207,9 @@ class  TurtleStack
         var scale =  1.0 / (this.depth + 1);
 
         var currPos = this.currTurtle.getPosition();
-     //   var x = vec4.create();
-     //   vec4.add(currPos, currPos, vec4.multiply(x, vec4.fromValues(1.0, 2.0, 1.0, 1.0), this.currTurtle.getDirection()));
         var currRot = this.currTurtle.getOrientation();
         quat.normalize(currRot, currRot);
-        vec4.normalize(currPos, currPos);
+    
         var currTrans = mat4.create();
         // scale it based on depth
      

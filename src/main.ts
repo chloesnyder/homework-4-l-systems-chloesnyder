@@ -18,7 +18,7 @@ var OBJ = require('webgl-obj-loader');
 // Define an object with application parameters and button callbacks
 // This will be referred to by dat.GUI's functions that add GUI elements.
 const controls = {
-  iterations: 2,
+  iterations: 1,
   angle : 45,
   distance : 3.0, 
   axiom : "X",
