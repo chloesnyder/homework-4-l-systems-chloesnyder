@@ -84,7 +84,7 @@ function main() {
   const gui = new DAT.GUI();
   gui.add(controls, 'iterations', 0, 25).step(1);
   gui.add(controls, 'angle', 0, 360).step(1);
-  gui.add(controls, 'distance', 0, 5).step(.5);
+  gui.add(controls, 'distance', 3, 3.5).step(.05);
   gui.add(controls, 'axiom');
   gui.add(controls, 'Load LSystem');
 
